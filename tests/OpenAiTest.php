@@ -673,3 +673,59 @@ it('should delete a response', function () use ($open_ai) {
 
     $this->assertStringContainsString('deleted', $result);
 })->group('working');
+
+it('should handle create conversation', function () use ($open_ai) {
+    $result = $open_ai->createConversation([
+        'metadata' => ['topic' => 'demo'],
+    ]);
+
+    $this->assertStringContainsString('"object": "conversation"', $result);
+    $this->assertStringContainsString('id', $result);
+})->group('working');
+
+it('should handle retrieve and delete conversation', function () use ($open_ai) {
+    $created = $open_ai->createConversation();
+    $id = json_decode($created, true)['id'];
+
+    $retrieved = $open_ai->retrieveConversation($id);
+    $this->assertStringContainsString('"object": "conversation"', $retrieved);
+
+    $deleted = $open_ai->deleteConversation($id);
+    $this->assertStringContainsString('deleted', $deleted);
+})->group('working');
+
+it('should handle create and list conversation items', function () use ($open_ai) {
+    $created = $open_ai->createConversation();
+    $id = json_decode($created, true)['id'];
+
+    $items = $open_ai->createConversationItems($id, [
+        'items' => [
+            ['type' => 'message', 'role' => 'user', 'content' => 'Hello.'],
+        ],
+    ]);
+    $this->assertStringContainsString('"object": "list"', $items);
+
+    $list = $open_ai->listConversationItems($id, ['limit' => 10]);
+    $this->assertStringContainsString('"object": "list"', $list);
+    $this->assertStringContainsString('data', $list);
+
+    $open_ai->deleteConversation($id);
+})->group('working');
+
+it('should handle create and delete vector store', function () use ($open_ai) {
+    $created = $open_ai->createVectorStore([
+        'name' => 'test-vs',
+    ]);
+    $this->assertStringContainsString('"object": "vector_store"', $created);
+    $id = json_decode($created, true)['id'];
+
+    $deleted = $open_ai->deleteVectorStore($id);
+    $this->assertStringContainsString('deleted', $deleted);
+})->group('working');
+
+it('should handle list vector stores', function () use ($open_ai) {
+    $result = $open_ai->listVectorStores(['limit' => 5]);
+
+    $this->assertStringContainsString('"object": "list"', $result);
+    $this->assertStringContainsString('data', $result);
+})->group('working');

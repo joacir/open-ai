@@ -504,6 +504,142 @@ $result = $open_ai->listResponseInputItems('resp_abc123', ['limit' => 20]);
 | Manual conversation history            | `previous_response_id` for stateful chaining      |
 | Custom tool plumbing                   | Built-in tools via `tools` (web_search, etc.)     |
 
+## Conversations
+
+The Conversations API replaces Assistants Threads for stateful multi-turn. A conversation stores `items` (messages, tool
+calls, tool outputs, reasoning items). Reference a conversation from `response()` via `$opts['conversation']` and the
+model has the full history without you resending it.
+
+### Create conversation
+
+```php
+$conv = $open_ai->createConversation([
+    'metadata' => ['user_id' => '42'],
+    'items' => [
+        ['type' => 'message', 'role' => 'user', 'content' => 'Remember my name is Joacir.'],
+    ],
+]);
+$convId = json_decode($conv, true)['id'];
+```
+
+### Use a conversation with `response()`
+
+```php
+$result = $open_ai->response([
+    'model' => 'gpt-4o-mini',
+    'conversation' => $convId,
+    'input' => 'What is my name?',
+]);
+```
+
+### Retrieve, modify, delete conversation
+
+```php
+$open_ai->retrieveConversation($convId);
+$open_ai->modifyConversation($convId, ['metadata' => ['status' => 'closed']]);
+$open_ai->deleteConversation($convId);
+```
+
+### Items (messages, tool calls, tool outputs)
+
+```php
+$open_ai->createConversationItems($convId, [
+    'items' => [
+        ['type' => 'message', 'role' => 'user', 'content' => 'New question.'],
+    ],
+]);
+
+$open_ai->listConversationItems($convId, ['limit' => 20, 'order' => 'desc']);
+$open_ai->retrieveConversationItem($convId, 'item_abc123');
+$open_ai->deleteConversationItem($convId, 'item_abc123');
+```
+
+## Vector Stores
+
+Vector stores power the `file_search` tool in Responses. Upload files via `uploadFile()` first, then attach them to a
+vector store.
+
+### Create, list, retrieve, modify, delete
+
+```php
+$vs = $open_ai->createVectorStore([
+    'name' => 'support-docs',
+    'expires_after' => ['anchor' => 'last_active_at', 'days' => 7],
+]);
+$vsId = json_decode($vs, true)['id'];
+
+$open_ai->listVectorStores(['limit' => 20]);
+$open_ai->retrieveVectorStore($vsId);
+$open_ai->modifyVectorStore($vsId, ['name' => 'kb-v2']);
+$open_ai->deleteVectorStore($vsId);
+```
+
+### Search a vector store directly
+
+```php
+$open_ai->searchVectorStore($vsId, [
+    'query' => 'refund policy',
+    'max_num_results' => 5,
+]);
+```
+
+### Files in a vector store
+
+```php
+$open_ai->createVectorStoreFile($vsId, ['file_id' => 'file-abc']);
+$open_ai->listVectorStoreFiles($vsId, ['limit' => 50]);
+$open_ai->retrieveVectorStoreFile($vsId, 'file-abc');
+$open_ai->updateVectorStoreFileAttributes($vsId, 'file-abc', [
+    'attributes' => ['language' => 'pt-BR'],
+]);
+$open_ai->deleteVectorStoreFile($vsId, 'file-abc');
+$open_ai->retrieveVectorStoreFileContent($vsId, 'file-abc');
+```
+
+### File batches
+
+Bulk attach files in one async job:
+
+```php
+$batch = $open_ai->createVectorStoreFileBatch($vsId, [
+    'file_ids' => ['file-a', 'file-b', 'file-c'],
+]);
+$batchId = json_decode($batch, true)['id'];
+
+$open_ai->retrieveVectorStoreFileBatch($vsId, $batchId);
+$open_ai->listVectorStoreFileBatchFiles($vsId, $batchId, ['limit' => 100]);
+$open_ai->cancelVectorStoreFileBatch($vsId, $batchId);
+```
+
+### Use vector store with `response()` and `file_search`
+
+```php
+$open_ai->response([
+    'model' => 'gpt-4o-mini',
+    'input' => 'What is the refund policy?',
+    'tools' => [
+        ['type' => 'file_search', 'vector_store_ids' => [$vsId]],
+    ],
+]);
+```
+
+## Prompts
+
+Retrieve a Prompt template created in the OpenAI dashboard:
+
+```php
+$open_ai->retrievePrompt('pmpt_abc123');
+```
+
+Then reference it from `response()`:
+
+```php
+$open_ai->response([
+    'model' => 'gpt-4o-mini',
+    'prompt' => ['id' => 'pmpt_abc123', 'variables' => ['city' => 'São Paulo']],
+]);
+```
+
 ## Completions
 
 Given a prompt, the model will return one or more predicted completions, and can also return the probabilities of
@@ -989,6 +1125,24 @@ $result = $open_ai->retrieveModel("text-ada-001");
  ```php
 echo $search;
 ```
+## ⚠️ Assistants Beta API — Deprecation Notice
+
+The Assistants beta family below (**Assistants**, **Threads**, **Messages**, **Runs**) is being shut down by OpenAI
+on **August 26, 2026**. Migrate to the new stack:
+
+| Legacy (Assistants beta)        | New (GA)                                            |
+|---------------------------------|-----------------------------------------------------|
+| `createAssistant()`             | Build prompts in the dashboard + pass via `prompt`  |
+| `createThread()`                | `createConversation()`                              |
+| `createThreadMessage()`         | `createConversationItems()`                         |
+| `listThreadMessages()`          | `listConversationItems()`                           |
+| `createRun()`                   | `response()` with `'conversation' => $convId`       |
+| `retrieveRunStep()`             | Inspect `response.output[]` (steps are items)       |
+| `submitToolOutputs()`           | App code manages tool loops between `response()` calls |
+| Assistant Files / Message Files | `createVectorStoreFile()` + `file_search` tool      |
+
+All legacy methods are annotated `@deprecated` and will be removed in a future major release.
+
 ## Assistants (beta)
 
 Allows you to build AI assistants within your own applications.
