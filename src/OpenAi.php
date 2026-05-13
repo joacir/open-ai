@@ -212,8 +212,8 @@ class OpenAi
      */
     public function chat($opts, $stream = null)
     {
-        if ($stream != null && array_key_exists('stream', $opts)) {
-            if (! $opts['stream']) {
+        if (array_key_exists('stream', $opts) && $opts['stream']) {
+            if ($stream == null) {
                 throw new Exception(
                     'Please provide a stream function. Check https://github.com/orhanerday/open-ai#stream-example for an example.'
                 );
@@ -227,6 +227,416 @@ class OpenAi
         $this->baseUrl($url);
 
         return $this->sendRequest($url, 'POST', $opts);
+    }
+
+    /**
+     * @param        $opts
+     * @param  null  $stream
+     * @return bool|string
+     * @throws Exception
+     */
+    public function response($opts, $stream = null)
+    {
+        if (array_key_exists('stream', $opts) && $opts['stream']) {
+            if ($stream == null) {
+                throw new Exception(
+                    'Please provide a stream function. Check https://github.com/orhanerday/open-ai#stream-example for an example.'
+                );
+            }
+
+            $this->stream_method = $stream;
+        }
+
+        $url = Url::responsesUrl();
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'POST', $opts);
+    }
+
+    /**
+     * @param $response_id
+     * @return bool|string
+     */
+    public function retrieveResponse($response_id)
+    {
+        $response_id = "/$response_id";
+        $url = Url::responsesUrl().$response_id;
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'GET');
+    }
+
+    /**
+     * @param $response_id
+     * @return bool|string
+     */
+    public function deleteResponse($response_id)
+    {
+        $response_id = "/$response_id";
+        $url = Url::responsesUrl().$response_id;
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'DELETE');
+    }
+
+    /**
+     * @param $response_id
+     * @return bool|string
+     */
+    public function cancelResponse($response_id)
+    {
+        $response_id = "/$response_id/cancel";
+        $url = Url::responsesUrl().$response_id;
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'POST');
+    }
+
+    /**
+     * @param        $response_id
+     * @param  array $query
+     * @return bool|string
+     */
+    public function listResponseInputItems($response_id, $query = [])
+    {
+        $url = Url::responsesUrl()."/$response_id/input_items";
+        if (! empty($query)) {
+            $url .= '?'.http_build_query($query);
+        }
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'GET');
+    }
+
+    /**
+     * @param  array $data
+     * @return bool|string
+     */
+    public function createConversation($data = [])
+    {
+        $url = Url::conversationsUrl();
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'POST', $data);
+    }
+
+    /**
+     * @param $conversation_id
+     * @return bool|string
+     */
+    public function retrieveConversation($conversation_id)
+    {
+        $url = Url::conversationsUrl()."/$conversation_id";
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'GET');
+    }
+
+    /**
+     * @param        $conversation_id
+     * @param  array $data
+     * @return bool|string
+     */
+    public function modifyConversation($conversation_id, $data)
+    {
+        $url = Url::conversationsUrl()."/$conversation_id";
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'POST', $data);
+    }
+
+    /**
+     * @param $conversation_id
+     * @return bool|string
+     */
+    public function deleteConversation($conversation_id)
+    {
+        $url = Url::conversationsUrl()."/$conversation_id";
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'DELETE');
+    }
+
+    /**
+     * @param        $conversation_id
+     * @param  array $data
+     * @return bool|string
+     */
+    public function createConversationItems($conversation_id, $data)
+    {
+        $url = Url::conversationsUrl()."/$conversation_id/items";
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'POST', $data);
+    }
+
+    /**
+     * @param        $conversation_id
+     * @param  array $query
+     * @return bool|string
+     */
+    public function listConversationItems($conversation_id, $query = [])
+    {
+        $url = Url::conversationsUrl()."/$conversation_id/items";
+        if (! empty($query)) {
+            $url .= '?'.http_build_query($query);
+        }
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'GET');
+    }
+
+    /**
+     * @param $conversation_id
+     * @param $item_id
+     * @return bool|string
+     */
+    public function retrieveConversationItem($conversation_id, $item_id)
+    {
+        $url = Url::conversationsUrl()."/$conversation_id/items/$item_id";
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'GET');
+    }
+
+    /**
+     * @param $conversation_id
+     * @param $item_id
+     * @return bool|string
+     */
+    public function deleteConversationItem($conversation_id, $item_id)
+    {
+        $url = Url::conversationsUrl()."/$conversation_id/items/$item_id";
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'DELETE');
+    }
+
+    /**
+     * @param  array $data
+     * @return bool|string
+     */
+    public function createVectorStore($data = [])
+    {
+        $url = Url::vectorStoresUrl();
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'POST', $data);
+    }
+
+    /**
+     * @param  array $query
+     * @return bool|string
+     */
+    public function listVectorStores($query = [])
+    {
+        $url = Url::vectorStoresUrl();
+        if (! empty($query)) {
+            $url .= '?'.http_build_query($query);
+        }
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'GET');
+    }
+
+    /**
+     * @param $vector_store_id
+     * @return bool|string
+     */
+    public function retrieveVectorStore($vector_store_id)
+    {
+        $url = Url::vectorStoresUrl()."/$vector_store_id";
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'GET');
+    }
+
+    /**
+     * @param        $vector_store_id
+     * @param  array $data
+     * @return bool|string
+     */
+    public function modifyVectorStore($vector_store_id, $data)
+    {
+        $url = Url::vectorStoresUrl()."/$vector_store_id";
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'POST', $data);
+    }
+
+    /**
+     * @param $vector_store_id
+     * @return bool|string
+     */
+    public function deleteVectorStore($vector_store_id)
+    {
+        $url = Url::vectorStoresUrl()."/$vector_store_id";
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'DELETE');
+    }
+
+    /**
+     * @param        $vector_store_id
+     * @param  array $data
+     * @return bool|string
+     */
+    public function searchVectorStore($vector_store_id, $data)
+    {
+        $url = Url::vectorStoresUrl()."/$vector_store_id/search";
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'POST', $data);
+    }
+
+    /**
+     * @param        $vector_store_id
+     * @param  array $data
+     * @return bool|string
+     */
+    public function createVectorStoreFile($vector_store_id, $data)
+    {
+        $url = Url::vectorStoresUrl()."/$vector_store_id/files";
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'POST', $data);
+    }
+
+    /**
+     * @param        $vector_store_id
+     * @param  array $query
+     * @return bool|string
+     */
+    public function listVectorStoreFiles($vector_store_id, $query = [])
+    {
+        $url = Url::vectorStoresUrl()."/$vector_store_id/files";
+        if (! empty($query)) {
+            $url .= '?'.http_build_query($query);
+        }
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'GET');
+    }
+
+    /**
+     * @param $vector_store_id
+     * @param $file_id
+     * @return bool|string
+     */
+    public function retrieveVectorStoreFile($vector_store_id, $file_id)
+    {
+        $url = Url::vectorStoresUrl()."/$vector_store_id/files/$file_id";
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'GET');
+    }
+
+    /**
+     * @param        $vector_store_id
+     * @param        $file_id
+     * @param  array $data
+     * @return bool|string
+     */
+    public function updateVectorStoreFileAttributes($vector_store_id, $file_id, $data)
+    {
+        $url = Url::vectorStoresUrl()."/$vector_store_id/files/$file_id";
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'POST', $data);
+    }
+
+    /**
+     * @param $vector_store_id
+     * @param $file_id
+     * @return bool|string
+     */
+    public function deleteVectorStoreFile($vector_store_id, $file_id)
+    {
+        $url = Url::vectorStoresUrl()."/$vector_store_id/files/$file_id";
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'DELETE');
+    }
+
+    /**
+     * @param $vector_store_id
+     * @param $file_id
+     * @return bool|string
+     */
+    public function retrieveVectorStoreFileContent($vector_store_id, $file_id)
+    {
+        $url = Url::vectorStoresUrl()."/$vector_store_id/files/$file_id/content";
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'GET');
+    }
+
+    /**
+     * @param        $vector_store_id
+     * @param  array $data
+     * @return bool|string
+     */
+    public function createVectorStoreFileBatch($vector_store_id, $data)
+    {
+        $url = Url::vectorStoresUrl()."/$vector_store_id/file_batches";
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'POST', $data);
+    }
+
+    /**
+     * @param $vector_store_id
+     * @param $batch_id
+     * @return bool|string
+     */
+    public function retrieveVectorStoreFileBatch($vector_store_id, $batch_id)
+    {
+        $url = Url::vectorStoresUrl()."/$vector_store_id/file_batches/$batch_id";
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'GET');
+    }
+
+    /**
+     * @param $vector_store_id
+     * @param $batch_id
+     * @return bool|string
+     */
+    public function cancelVectorStoreFileBatch($vector_store_id, $batch_id)
+    {
+        $url = Url::vectorStoresUrl()."/$vector_store_id/file_batches/$batch_id/cancel";
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'POST');
+    }
+
+    /**
+     * @param        $vector_store_id
+     * @param        $batch_id
+     * @param  array $query
+     * @return bool|string
+     */
+    public function listVectorStoreFileBatchFiles($vector_store_id, $batch_id, $query = [])
+    {
+        $url = Url::vectorStoresUrl()."/$vector_store_id/file_batches/$batch_id/files";
+        if (! empty($query)) {
+            $url .= '?'.http_build_query($query);
+        }
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'GET');
+    }
+
+    /**
+     * @param $prompt_id
+     * @return bool|string
+     */
+    public function retrievePrompt($prompt_id)
+    {
+        $url = Url::promptsUrl()."/$prompt_id";
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'GET');
     }
 
     /**
@@ -431,6 +841,7 @@ class OpenAi
     /**
      * @param array $data
      * @return bool|string
+     * @deprecated The Assistants API is being shut down on August 26, 2026. Migrate to the Responses API (response()) and Conversations API.
      */
     public function createAssistant($data)
     {
@@ -445,6 +856,7 @@ class OpenAi
     /**
      * @param string $assistantId
      * @return bool|string
+     * @deprecated The Assistants API is being shut down on August 26, 2026. Migrate to the Responses API (response()) and Conversations API.
      */
     public function retrieveAssistant($assistantId)
     {
@@ -459,6 +871,7 @@ class OpenAi
      * @param string $assistantId
      * @param array $data
      * @return bool|string
+     * @deprecated The Assistants API is being shut down on August 26, 2026. Migrate to the Responses API (response()) and Conversations API.
      */
     public function modifyAssistant($assistantId, $data)
     {
@@ -472,6 +885,7 @@ class OpenAi
     /**
      * @param string $assistantId
      * @return bool|string
+     * @deprecated The Assistants API is being shut down on August 26, 2026. Migrate to the Responses API (response()) and Conversations API.
      */
     public function deleteAssistant($assistantId)
     {
@@ -485,6 +899,7 @@ class OpenAi
     /**
      * @param array $query
      * @return bool|string
+     * @deprecated The Assistants API is being shut down on August 26, 2026. Migrate to the Responses API (response()) and Conversations API.
      */
     public function listAssistants($query = [])
     {
@@ -502,6 +917,7 @@ class OpenAi
      * @param string $assistantId
      * @param string $fileId
      * @return bool|string
+     * @deprecated The Assistants API is being shut down on August 26, 2026. Migrate to the Responses API (response()) and Conversations API.
      */
     public function createAssistantFile($assistantId, $fileId)
     {
@@ -516,6 +932,7 @@ class OpenAi
      * @param string $assistantId
      * @param string $fileId
      * @return bool|string
+     * @deprecated The Assistants API is being shut down on August 26, 2026. Migrate to the Responses API (response()) and Conversations API.
      */
     public function retrieveAssistantFile($assistantId, $fileId)
     {
@@ -530,6 +947,7 @@ class OpenAi
      * @param string $assistantId
      * @param array $query
      * @return bool|string
+     * @deprecated The Assistants API is being shut down on August 26, 2026. Migrate to the Responses API (response()) and Conversations API.
      */
     public function listAssistantFiles($assistantId, $query = [])
     {
@@ -547,6 +965,7 @@ class OpenAi
      * @param string $assistantId
      * @param string $fileId
      * @return bool|string
+     * @deprecated The Assistants API is being shut down on August 26, 2026. Migrate to the Responses API (response()) and Conversations API.
      */
     public function deleteAssistantFile($assistantId, $fileId)
     {
@@ -560,6 +979,7 @@ class OpenAi
     /**
      * @param array $data
      * @return bool|string
+     * @deprecated The Assistants API is being shut down on August 26, 2026. Migrate to the Conversations API (createConversation()).
      */
     public function createThread($data = [])
     {
@@ -573,6 +993,7 @@ class OpenAi
     /**
      * @param string $threadId
      * @return bool|string
+     * @deprecated The Assistants API is being shut down on August 26, 2026. Migrate to the Conversations API (retrieveConversation()).
      */
     public function retrieveThread($threadId)
     {
@@ -587,6 +1008,7 @@ class OpenAi
      * @param string $threadId
      * @param array $data
      * @return bool|string
+     * @deprecated The Assistants API is being shut down on August 26, 2026. Migrate to the Conversations API (modifyConversation()).
      */
     public function modifyThread($threadId, $data)
     {
@@ -600,6 +1022,7 @@ class OpenAi
     /**
      * @param string $threadId
      * @return bool|string
+     * @deprecated The Assistants API is being shut down on August 26, 2026. Migrate to the Conversations API (deleteConversation()).
      */
     public function deleteThread($threadId)
     {
@@ -614,6 +1037,7 @@ class OpenAi
      * @param string $threadId
      * @param array $data
      * @return bool|string
+     * @deprecated The Assistants API is being shut down on August 26, 2026. Migrate to the Conversations API (createConversationItems()).
      */
     public function createThreadMessage($threadId, $data)
     {
@@ -628,6 +1052,7 @@ class OpenAi
      * @param string $threadId
      * @param string $messageId
      * @return bool|string
+     * @deprecated The Assistants API is being shut down on August 26, 2026. Migrate to the Conversations API (retrieveConversationItem()).
      */
     public function retrieveThreadMessage($threadId, $messageId)
     {
@@ -643,6 +1068,7 @@ class OpenAi
      * @param string $messageId
      * @param array $data
      * @return bool|string
+     * @deprecated The Assistants API is being shut down on August 26, 2026. Migrate to the Conversations API.
      */
     public function modifyThreadMessage($threadId, $messageId, $data)
     {
@@ -657,6 +1083,7 @@ class OpenAi
      * @param string $threadId
      * @param array $query
      * @return bool|string
+     * @deprecated The Assistants API is being shut down on August 26, 2026. Migrate to the Conversations API (listConversationItems()).
      */
     public function listThreadMessages($threadId, $query = [])
     {
@@ -675,6 +1102,7 @@ class OpenAi
      * @param string $messageId
      * @param string $fileId
      * @return bool|string
+     * @deprecated The Assistants API is being shut down on August 26, 2026. Migrate to the Responses/Conversations API.
      */
     public function retrieveMessageFile($threadId, $messageId, $fileId)
     {
@@ -690,6 +1118,7 @@ class OpenAi
      * @param string $messageId
      * @param array $query
      * @return bool|string
+     * @deprecated The Assistants API is being shut down on August 26, 2026. Migrate to the Responses/Conversations API.
      */
     public function listMessageFiles($threadId, $messageId, $query = [])
     {
@@ -707,6 +1136,7 @@ class OpenAi
      * @param string $threadId
      * @param array $data
      * @return bool|string
+     * @deprecated The Assistants API is being shut down on August 26, 2026. Migrate to the Responses API (response() with conversation reference).
      */
     public function createRun($threadId, $data)
     {
@@ -721,6 +1151,7 @@ class OpenAi
      * @param string $threadId
      * @param string $runId
      * @return bool|string
+     * @deprecated The Assistants API is being shut down on August 26, 2026. Migrate to the Responses API (retrieveResponse()).
      */
     public function retrieveRun($threadId, $runId)
     {
@@ -736,6 +1167,7 @@ class OpenAi
      * @param string $runId
      * @param array $data
      * @return bool|string
+     * @deprecated The Assistants API is being shut down on August 26, 2026. Migrate to the Responses API.
      */
     public function modifyRun($threadId, $runId, $data)
     {
@@ -750,6 +1182,7 @@ class OpenAi
      * @param string $threadId
      * @param array $query
      * @return bool|string
+     * @deprecated The Assistants API is being shut down on August 26, 2026. Migrate to the Responses API.
      */
     public function listRuns($threadId, $query = [])
     {
@@ -768,6 +1201,7 @@ class OpenAi
      * @param string $runId
      * @param array $outputs
      * @return bool|string
+     * @deprecated The Assistants API is being shut down on August 26, 2026. In Responses API, tool call loops are managed by the application code.
      */
     public function submitToolOutputs($threadId, $runId, $outputs)
     {
@@ -782,6 +1216,7 @@ class OpenAi
      * @param string $threadId
      * @param string $runId
      * @return bool|string
+     * @deprecated The Assistants API is being shut down on August 26, 2026. Migrate to the Responses API (cancelResponse()).
      */
     public function cancelRun($threadId, $runId)
     {
@@ -795,6 +1230,7 @@ class OpenAi
     /**
      * @param array $data
      * @return bool|string
+     * @deprecated The Assistants API is being shut down on August 26, 2026. Migrate to the Responses API (response()).
      */
     public function createThreadAndRun($data)
     {
@@ -810,6 +1246,7 @@ class OpenAi
      * @param string $runId
      * @param string $stepId
      * @return bool|string
+     * @deprecated The Assistants API is being shut down on August 26, 2026. In Responses API, run steps are represented as items in response.output.
      */
     public function retrieveRunStep($threadId, $runId, $stepId)
     {
@@ -825,6 +1262,7 @@ class OpenAi
      * @param string $runId
      * @param array $query
      * @return bool|string
+     * @deprecated The Assistants API is being shut down on August 26, 2026. In Responses API, run steps are represented as items in response.output.
      */
     public function listRunSteps($threadId, $runId, $query = [])
     {

@@ -252,7 +252,18 @@ it('should handle simple chat completion using the new endpoint', function () us
         "presence_penalty" => 0,
     ]);
 
-    $this->assertStringContainsString('text', $result);
+    $this->assertStringContainsString('"object": "chat.completion"', $result);
+    $this->assertStringContainsString('content', $result);
+})->group('working');
+
+it('should throw error when stream true without callback in chat', function () use ($open_ai) {
+    expect(fn () => $open_ai->chat([
+        'model' => 'gpt-3.5-turbo',
+        'messages' => [
+            ['role' => 'user', 'content' => 'Hello'],
+        ],
+        'stream' => true,
+    ]))->toThrow(Exception::class, 'Please provide a stream function. Check https://github.com/orhanerday/open-ai#stream-example for an example.');
 })->group('working');
 
 it('should handle create assistant', function () use ($open_ai) {
@@ -602,4 +613,130 @@ it('should handle list run steps', function () use ($open_ai) {
     $this->assertStringContainsString('id', $steps);
     $this->assertStringContainsString('"object": "list"', $steps);
     $this->assertStringContainsString('data', $steps);
+})->group('working');
+
+it('should handle simple response', function () use ($open_ai) {
+    $result = $open_ai->response([
+        'model' => 'gpt-4o-mini',
+        'input' => 'Say hello in one word.',
+    ]);
+
+    $this->assertStringContainsString('"object": "response"', $result);
+    $this->assertStringContainsString('output', $result);
+})->group('working');
+
+it('should throw error when stream true without callback in response', function () use ($open_ai) {
+    expect(fn () => $open_ai->response([
+        'model' => 'gpt-4o-mini',
+        'input' => 'Hello',
+        'stream' => true,
+    ]))->toThrow(Exception::class, 'Please provide a stream function. Check https://github.com/orhanerday/open-ai#stream-example for an example.');
+})->group('working');
+
+it('should handle response with instructions', function () use ($open_ai) {
+    $result = $open_ai->response([
+        'model' => 'gpt-4o-mini',
+        'instructions' => 'You are a terse assistant. Reply with a single word.',
+        'input' => 'Greet me.',
+    ]);
+
+    $this->assertStringContainsString('"object": "response"', $result);
+    $this->assertStringContainsString('output', $result);
+})->group('working');
+
+it('should retrieve a response', function () use ($open_ai) {
+    $created = $open_ai->response([
+        'model' => 'gpt-4o-mini',
+        'input' => 'Hello.',
+        'store' => true,
+    ]);
+    $id = json_decode($created, true)['id'];
+
+    $result = $open_ai->retrieveResponse($id);
+
+    $this->assertStringContainsString('"id": "'.$id.'"', $result);
+    $this->assertStringContainsString('"object": "response"', $result);
+})->group('working');
+
+it('should list response input items', function () use ($open_ai) {
+    $created = $open_ai->response([
+        'model' => 'gpt-4o-mini',
+        'input' => 'Hello.',
+        'store' => true,
+    ]);
+    $id = json_decode($created, true)['id'];
+
+    $result = $open_ai->listResponseInputItems($id, ['limit' => 10]);
+
+    $this->assertStringContainsString('"object": "list"', $result);
+    $this->assertStringContainsString('data', $result);
+})->group('working');
+
+it('should delete a response', function () use ($open_ai) {
+    $created = $open_ai->response([
+        'model' => 'gpt-4o-mini',
+        'input' => 'Hello.',
+        'store' => true,
+    ]);
+    $id = json_decode($created, true)['id'];
+
+    $result = $open_ai->deleteResponse($id);
+
+    $this->assertStringContainsString('deleted', $result);
+})->group('working');
+
+it('should handle create conversation', function () use ($open_ai) {
+    $result = $open_ai->createConversation([
+        'metadata' => ['topic' => 'demo'],
+    ]);
+
+    $this->assertStringContainsString('"object": "conversation"', $result);
+    $this->assertStringContainsString('id', $result);
+})->group('working');
+
+it('should handle retrieve and delete conversation', function () use ($open_ai) {
+    $created = $open_ai->createConversation();
+    $id = json_decode($created, true)['id'];
+
+    $retrieved = $open_ai->retrieveConversation($id);
+    $this->assertStringContainsString('"object": "conversation"', $retrieved);
+
+    $deleted = $open_ai->deleteConversation($id);
+    $this->assertStringContainsString('deleted', $deleted);
+})->group('working');
+
+it('should handle create and list conversation items', function () use ($open_ai) {
+    $created = $open_ai->createConversation();
+    $id = json_decode($created, true)['id'];
+
+    $items = $open_ai->createConversationItems($id, [
+        'items' => [
+            ['type' => 'message', 'role' => 'user', 'content' => 'Hello.'],
+        ],
+    ]);
+    $this->assertStringContainsString('"object": "list"', $items);
+
+    $list = $open_ai->listConversationItems($id, ['limit' => 10]);
+    $this->assertStringContainsString('"object": "list"', $list);
+    $this->assertStringContainsString('data', $list);
+
+    $open_ai->deleteConversation($id);
+})->group('working');
+
+it('should handle create and delete vector store', function () use ($open_ai) {
+    $created = $open_ai->createVectorStore([
+        'name' => 'test-vs',
+    ]);
+    $this->assertStringContainsString('"object": "vector_store"', $created);
+    $id = json_decode($created, true)['id'];
+
+    $deleted = $open_ai->deleteVectorStore($id);
+    $this->assertStringContainsString('deleted', $deleted);
+})->group('working');
+
+it('should handle list vector stores', function () use ($open_ai) {
+    $result = $open_ai->listVectorStores(['limit' => 5]);
+
+    $this->assertStringContainsString('"object": "list"', $result);
+    $this->assertStringContainsString('data', $result);
 })->group('working');
