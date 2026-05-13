@@ -174,6 +174,33 @@ class Url
      * @param
      * @return string
      */
+    public static function conversationsUrl(): string
+    {
+        return self::OPEN_AI_URL . "/conversations";
+    }
+
+    /**
+     * @param
+     * @return string
+     */
+    public static function vectorStoresUrl(): string
+    {
+        return self::OPEN_AI_URL . "/vector_stores";
+    }
+
+    /**
+     * @param
+     * @return string
+     */
+    public static function promptsUrl(): string
+    {
+        return self::OPEN_AI_URL . "/prompts";
+    }
+
+    /**
+     * @param
+     * @return string
+     */
     public static function assistantsUrl(): string
     {
         return self::OPEN_AI_URL . "/assistants";
