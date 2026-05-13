@@ -231,6 +231,85 @@ class OpenAi
     }
 
     /**
+     * @param        $opts
+     * @param  null  $stream
+     * @return bool|string
+     * @throws Exception
+     */
+    public function response($opts, $stream = null)
+    {
+        if ($stream != null && array_key_exists('stream', $opts)) {
+            if (! $opts['stream']) {
+                throw new Exception(
+                    'Please provide a stream function. Check https://github.com/orhanerday/open-ai#stream-example for an example.'
+                );
+            }
+
+            $this->stream_method = $stream;
+        }
+
+        $url = Url::responsesUrl();
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'POST', $opts);
+    }
+
+    /**
+     * @param $response_id
+     * @return bool|string
+     */
+    public function retrieveResponse($response_id)
+    {
+        $response_id = "/$response_id";
+        $url = Url::responsesUrl().$response_id;
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'GET');
+    }
+
+    /**
+     * @param $response_id
+     * @return bool|string
+     */
+    public function deleteResponse($response_id)
+    {
+        $response_id = "/$response_id";
+        $url = Url::responsesUrl().$response_id;
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'DELETE');
+    }
+
+    /**
+     * @param $response_id
+     * @return bool|string
+     */
+    public function cancelResponse($response_id)
+    {
+        $response_id = "/$response_id/cancel";
+        $url = Url::responsesUrl().$response_id;
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'POST');
+    }
+
+    /**
+     * @param        $response_id
+     * @param  array $query
+     * @return bool|string
+     */
+    public function listResponseInputItems($response_id, $query = [])
+    {
+        $url = Url::responsesUrl()."/$response_id/input_items";
+        if (! empty($query)) {
+            $url .= '?'.http_build_query($query);
+        }
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'GET');
+    }
+
+    /**
      * @param $opts
      * @return bool|string
      */

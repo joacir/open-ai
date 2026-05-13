@@ -432,6 +432,115 @@ echo($d->choices[0]->message->content);
 
 > ### Related: [ChatGPT Clone Project](#chatgpt-clone-project)
 
+## Responses
+
+The Responses API (`POST /v1/responses`) is OpenAI's recommended replacement for Chat Completions. It accepts a flexible
+`input` (string or message array) plus an optional `instructions` system prompt, supports stateful multi-turn via
+`previous_response_id`, exposes built-in tools (`web_search`, `file_search`, `code_interpreter`, etc.), and returns a
+typed `output[]` array instead of `choices[]`.
+
+### Create response
+
+```php
+$result = $open_ai->response([
+    'model' => 'gpt-4o-mini',
+    'input' => 'Tell me a three sentence bedtime story about a unicorn.',
+]);
+```
+
+With an `instructions` system prompt and structured input:
+
+```php
+$result = $open_ai->response([
+    'model' => 'gpt-4o-mini',
+    'instructions' => 'You are a terse assistant.',
+    'input' => [
+        ['role' => 'user', 'content' => 'What is the capital of France?'],
+    ],
+]);
+```
+
+### Multi-turn with `previous_response_id`
+
+Instead of resending the full message history, pass the previous response's `id`:
+
+```php
+$first = $open_ai->response([
+    'model' => 'gpt-4o-mini',
+    'input' => 'My name is Joacir.',
+    'store' => true,
+]);
+$firstId = json_decode($first, true)['id'];
+
+$second = $open_ai->response([
+    'model' => 'gpt-4o-mini',
+    'previous_response_id' => $firstId,
+    'input' => 'What is my name?',
+]);
+```
+
+### Stream response
+
+Streaming uses Server-Sent Events. Pass `stream => true` plus a write callback, just like `chat()` / `completion()`:
+
+```php
+$opts = [
+    'model' => 'gpt-4o-mini',
+    'input' => 'Tell me a short story.',
+    'stream' => true,
+];
+
+header('Content-type: text/event-stream');
+header('Cache-Control: no-cache');
+
+$open_ai->response($opts, function ($curl_info, $data) {
+    echo $data;
+    ob_flush();
+    flush();
+
+    return strlen($data);
+});
+```
+
+### Retrieve response
+
+```php
+$result = $open_ai->retrieveResponse('resp_abc123');
+```
+
+### Delete response
+
+```php
+$result = $open_ai->deleteResponse('resp_abc123');
+```
+
+### Cancel response
+
+Cancels a response created with `background => true` that has not finished yet.
+
+```php
+$result = $open_ai->cancelResponse('resp_abc123');
+```
+
+### List response input items
+
+Returns the input items for a stored response. Accepts paging query params (`limit`, `order`, `after`, `before`,
+`include`).
+
+```php
+$result = $open_ai->listResponseInputItems('resp_abc123', ['limit' => 20]);
+```
+
+### Migrating from `chat()` to `response()`
+
+| Chat Completions                       | Responses                                         |
+|----------------------------------------|---------------------------------------------------|
+| `messages` array with `system`/`user`  | `input` (string or array) + `instructions`        |
+| `response_format`                      | `text.format`                                     |
+| `choices[0].message.content`           | `output[].content[].text` (or SDK `output_text`)  |
+| Manual conversation history            | `previous_response_id` for stateful chaining      |
+| Custom tool plumbing                   | Built-in tools via `tools` (web_search, etc.)     |
+
 ## Completions
 
 Given a prompt, the model will return one or more predicted completions, and can also return the probabilities of
