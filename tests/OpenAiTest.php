@@ -603,3 +603,73 @@ it('should handle list run steps', function () use ($open_ai) {
     $this->assertStringContainsString('"object": "list"', $steps);
     $this->assertStringContainsString('data', $steps);
 })->group('working');
+
+it('should handle simple response', function () use ($open_ai) {
+    $result = $open_ai->response([
+        'model' => 'gpt-4o-mini',
+        'input' => 'Say hello in one word.',
+    ]);
+
+    $this->assertStringContainsString('"object": "response"', $result);
+    $this->assertStringContainsString('output', $result);
+})->group('working');
+
+it('should throw error when stream true without callback in response', function () use ($open_ai) {
+    expect(fn () => $open_ai->response([
+        'model' => 'gpt-4o-mini',
+        'input' => 'Hello',
+        'stream' => true,
+    ]))->toThrow(Exception::class, 'Please provide a stream function. Check https://github.com/orhanerday/open-ai#stream-example for an example.');
+})->group('working');
+
+it('should handle response with instructions', function () use ($open_ai) {
+    $result = $open_ai->response([
+        'model' => 'gpt-4o-mini',
+        'instructions' => 'You are a terse assistant. Reply with a single word.',
+        'input' => 'Greet me.',
+    ]);
+
+    $this->assertStringContainsString('"object": "response"', $result);
+    $this->assertStringContainsString('output', $result);
+})->group('working');
+
+it('should retrieve a response', function () use ($open_ai) {
+    $created = $open_ai->response([
+        'model' => 'gpt-4o-mini',
+        'input' => 'Hello.',
+        'store' => true,
+    ]);
+    $id = json_decode($created, true)['id'];
+
+    $result = $open_ai->retrieveResponse($id);
+
+    $this->assertStringContainsString('"id": "'.$id.'"', $result);
+    $this->assertStringContainsString('"object": "response"', $result);
+})->group('working');
+
+it('should list response input items', function () use ($open_ai) {
+    $created = $open_ai->response([
+        'model' => 'gpt-4o-mini',
+        'input' => 'Hello.',
+        'store' => true,
+    ]);
+    $id = json_decode($created, true)['id'];
+
+    $result = $open_ai->listResponseInputItems($id, ['limit' => 10]);
+
+    $this->assertStringContainsString('"object": "list"', $result);
+    $this->assertStringContainsString('data', $result);
+})->group('working');
+
+it('should delete a response', function () use ($open_ai) {
+    $created = $open_ai->response([
+        'model' => 'gpt-4o-mini',
+        'input' => 'Hello.',
+        'store' => true,
+    ]);
+    $id = json_decode($created, true)['id'];
+
+    $result = $open_ai->deleteResponse($id);
+
+    $this->assertStringContainsString('deleted', $result);
+})->group('working');
