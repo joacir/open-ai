@@ -252,7 +252,8 @@ it('should handle simple chat completion using the new endpoint', function () us
         "presence_penalty" => 0,
     ]);
 
-    $this->assertStringContainsString('text', $result);
+    $this->assertStringContainsString('"object": "chat.completion"', $result);
+    $this->assertStringContainsString('content', $result);
 })->group('working');
 
 it('should throw error when stream true without callback in chat', function () use ($open_ai) {
