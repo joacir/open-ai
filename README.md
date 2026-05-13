@@ -4,6 +4,10 @@
 
 <br />
 
+
+## If you want to ensure this project stays alive and continues to faster improve, please please consider supporting it. Your help means a lot. Thank you!
+* [Buy me a coffee](https://www.buymeacoffee.com/orhane)
+* [Patreon](https://patreon.com/orhann)
 > ### ChatGPT API is currently supported, [click here](#chat-as-known-as-chatgpt-api) for the implementation introductions.
 
 <br />
@@ -46,10 +50,10 @@ repository useful! <br /><br /> Orhan*
 
 # Comparison With Other Packages
 
-| Project Name           | Required PHP Version | Description                                                                                                                                                | Type (Official / Community) | Support                                                                                                                                |
-|------------------------|----------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------|----------------------------------------------------------------------------------------------------------------------------------------|
-| **orhanerday/open-ai** | **PHP 7.4+**         | **Most downloaded, forked, contributed, huge community supported, and used PHP SDK for OpenAI GPT-3 and DALL-E. It also supports chatGPT-like streaming.** | Community                   | Available, ([Community driven Discord Server](https://discord.gg/xpGUD528XJ) or personal mail [orhann@duck.com](mailto:orhann@duck.com)) |
-| openai-** */c****t      | PHP 8.1+             | OpenAI PHP API client.                                                                                                                                     | Community                   | -                                                                                                                                      |
+| Project Name           | Required PHP Version (Lower is better) | Description                                                                                                                                                | Type (Official / Community) | Support                                                                                                                                  |
+|------------------------|----------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------|------------------------------------------------------------------------------------------------------------------------------------------|
+| **orhanerday/open-ai** | **PHP 7.4+**                           | **Most downloaded, forked, contributed, huge community supported, and used PHP SDK for OpenAI GPT-3 and DALL-E. It also supports chatGPT-like streaming.** | Community                   | Available, ([Community driven Discord Server](https://discord.gg/xpGUD528XJ) or personal mail [orhann@duck.com](mailto:orhann@duck.com)) |
+| openai-** */c****t     | PHP 8.1+                               | OpenAI PHP API client.                                                                                                                                     | Community                   | -                                                                                                                                        |
 
 
 <br />
@@ -60,11 +64,11 @@ Fully open-source and secure community-maintained, PHP SDK for accessing the Ope
 
 > #### For more information, you can read laravel news [blog post](https://laravel-news.com/openai-sdk-for-php).
 > #### Free support is available. [Join our discord server](#join-our-discord-server)
-> #### To get started with this package, you'll first want to be familiar with the [OpenAI API documentation](https://beta.openai.com/docs/introduction) and [examples](https://beta.openai.com/examples). Also you can get help from our discord channel that called [#api-support](https://discord.gg/R9CpVUdqQR)
+> #### To get started with this package, you'll first want to be familiar with the [OpenAI API documentation](https://platform.openai.com/docs/overview) and [examples](https://platform.openai.com/docs/examples). Also you can get help from our discord channel that called [#api-support](https://discord.gg/R9CpVUdqQR)
 
 ## News
 
-- orhanerday/open-ai added to community libraries php [section](https://beta.openai.com/docs/libraries/php).
+- orhanerday/open-ai added to community libraries php [section](https://platform.openai.com/docs/libraries/php).
 - orhanerday/open-ai featured
   on [PHPStorm blog post](https://blog.jetbrains.com/phpstorm/2022/12/php-annotated-december-2022/#:~:text=orhanerday/open%2Dai%20%E2%80%93%20A%20PHP%20SDK%20for%20accessing%20the%20OpenAI%20GPT%2D3%20API),
   thanks JetBrains!
@@ -91,9 +95,6 @@ appreciate a donation of any amount. You can make a donation through;
 
 * [Buy me a coffee](https://www.buymeacoffee.com/orhane)
 * [Patreon](https://patreon.com/orhann)
-* [Click here for the Coinbase QR](#btc) **Bitcoin** > 34w2DftWGkDqDbYMixkmdWWMLmaP9uTRz7
-* [Click here for the Coinbase QR](#doge) **Dogecoin** > DHiqcZox9M8kYDn7BkesnN6Z2kJ7dYG9Lc
-* [Click here for the Coinbase QR](#eth) **Ethereum** > 0x135E2D5d7AC40c6850f844BA589D68e91a268Ceb
 
 Thank you for considering a donation to Orhanerday/OpenAI PHP SDK. Your support is greatly appreciated and helps to
 ensure that the project can continue to grow and improve.
@@ -110,39 +111,40 @@ Please visit https://orhanerday.gitbook.io/openai-php-api-1/
 - Chat
     - [x] [ChatGPT API](#chat-as-known-as-chatgpt-api)
 - Models
-    - [x] [List models](https://beta.openai.com/docs/api-reference/models/list)
-    - [x] [Retrieve model](https://beta.openai.com/docs/api-reference/models/retrieve)
+    - [x] [List models](https://platform.openai.com/docs/api-reference/models/list)
+    - [x] [Retrieve model](https://platform.openai.com/docs/api-reference/models/retrieve)
 - Completions
-    - [x] [Create completion](https://beta.openai.com/docs/api-reference/completions/create)
+    - [x] [Create completion](https://platform.openai.com/docs/api-reference/completions/create)
 - Edits
-    - [x] [Create edits](https://beta.openai.com/docs/api-reference/edits/create)
+    - [x] [Create edits](https://platform.openai.com/docs/api-reference/edits/create)
 - Images
-    - [x] [Create image](https://beta.openai.com/docs/api-reference/images/create)
-    - [x] [Create image edit](https://beta.openai.com/docs/api-reference/images/create-edit)
-    - [x] [Create image variation](https://beta.openai.com/docs/api-reference/images/create-variation)
+    - [x] [Create image](https://platform.openai.com/docs/api-reference/images/create)
+    - [x] [Create image edit](https://platform.openai.com/docs/api-reference/images/create-edit)
+    - [x] [Create image variation](https://platform.openai.com/docs/api-reference/images/create-variation)
 - Embeddings
-    - [x] [Create embeddings](https://beta.openai.com/docs/api-reference/embeddings/create)
+    - [x] [Create embeddings](https://platform.openai.com/docs/api-reference/embeddings/create)
 - Audio
+    - [x] [Text to Speech (TTS)](https://platform.openai.com/docs/guides/text-to-speech)
     - [x] [Create transcription](https://platform.openai.com/docs/api-reference/audio/create)
     - [x] [Create translation](https://platform.openai.com/docs/api-reference/audio/create)
 - Files
-    - [x] [List files](https://beta.openai.com/docs/api-reference/files/list)
-    - [x] [Upload file](https://beta.openai.com/docs/api-reference/files/upload)
-    - [x] [Delete file](https://beta.openai.com/docs/api-reference/files/delete)
-    - [x] [Retrieve file](https://beta.openai.com/docs/api-reference/files/retrieve)
-    - [x] [Retrieve file content](https://beta.openai.com/docs/api-reference/files/retrieve-content)
+    - [x] [List files](https://platform.openai.com/docs/api-reference/files/list)
+    - [x] [Upload file](https://platform.openai.com/docs/api-reference/files/upload)
+    - [x] [Delete file](https://platform.openai.com/docs/api-reference/files/delete)
+    - [x] [Retrieve file](https://platform.openai.com/docs/api-reference/files/retrieve)
+    - [x] [Retrieve file content](https://platform.openai.com/docs/api-reference/files/retrieve-content)
 - Fine-tunes
-    - [x] [Create fine-tune (beta)](https://beta.openai.com/docs/api-reference/fine-tunes/create)
-    - [x] [List fine-tunes (beta)](https://beta.openai.com/docs/api-reference/fine-tunes/list)
-    - [x] [Retrieve fine-tune (beta)](https://beta.openai.com/docs/api-reference/fine-tunes/retrieve)
-    - [x] [Cancel fine-tune (beta)](https://beta.openai.com/docs/api-reference/fine-tunes/cancel)
-    - [x] [List fine-tune events (beta)](https://beta.openai.com/docs/api-reference/fine-tunes/events)
-    - [x] [Delete fine-tune model (beta)](https://beta.openai.com/docs/api-reference/fine-tunes/delete-model)
+    - [x] [Create fine-tune (beta)](https://platform.openai.com/docs/api-reference/fine-tunes/create)
+    - [x] [List fine-tunes (beta)](https://platform.openai.com/docs/api-reference/fine-tunes/list)
+    - [x] [Retrieve fine-tune (beta)](https://platform.openai.com/docs/api-reference/fine-tunes/retrieve)
+    - [x] [Cancel fine-tune (beta)](https://platform.openai.com/docs/api-reference/fine-tunes/cancel)
+    - [x] [List fine-tune events (beta)](https://platform.openai.com/docs/api-reference/fine-tunes/events)
+    - [x] [Delete fine-tune model (beta)](https://platform.openai.com/docs/api-reference/fine-tunes/delete-model)
 - Moderation
-    - [x] [Create moderation](https://beta.openai.com/docs/api-reference/moderations/create)
+    - [x] [Create moderation](https://platform.openai.com/docs/api-reference/moderations/create)
 - ~~Engines~~ *(deprecated)*
-    - ~~[List engines](https://beta.openai.com/docs/api-reference/engines/list)~~
-    - ~~[Retrieve engine](https://beta.openai.com/docs/api-reference/engines/retrieve)~~
+    - ~~[List engines](https://platform.openai.com/docs/api-reference/engines/list)~~
+    - ~~[Retrieve engine](https://platform.openai.com/docs/api-reference/engines/retrieve)~~
 - Assistants (beta)
     - [x] [Create assistant](https://platform.openai.com/docs/api-reference/assistants/createAssistant)
     - [x] [Retrieve assistant](https://platform.openai.com/docs/api-reference/assistants/getAssistant)
@@ -265,6 +267,41 @@ _Run the server with the following command_
 ```shell
 php -S localhost:8000 -t .
 ```
+
+## NVIDIA NIM INTEGRATION
+
+orhanerday/open-ai supports Nvidia NIM. The below example is MixtralAI. Check https://build.nvidia.com/explore/discover for more examples.
+
+```php
+<?php
+
+require __DIR__ . '/vendor/autoload.php'; // remove this line if you use a PHP Framework.
+
+use Orhanerday\OpenAi\OpenAi;
+
+$nvidia_ai_key = getenv('NVIDIA_AI_API_KEY');
+error_log($open_ai_key);
+$open_ai = new OpenAi($nvidia_ai_key);
+$open_ai->setBaseURL("https://integrate.api.nvidia.com");
+$chat = $open_ai->chat([
+    'model' => 'mistralai/mixtral-8x7b-instruct-v0.1',
+    'messages' => [["role" => "user", "content" => "Write a limmerick about the wonders of GPU computing."]],
+    'temperature' => 0.5,
+    'max_tokens' => 1024,
+    'top_p' => 1,
+]);
+
+var_dump($chat);
+echo "<br>";
+echo "<br>";
+echo "<br>";
+// decode response
+$d = json_decode($chat);
+// Get Content
+echo ($d->choices[0]->message->content);
+
+```
+
 
 ## Usage
 
@@ -818,7 +855,7 @@ $search = $open_ai->search([
 
 Get a vector representation of a given input that can be easily consumed by machine learning models and algorithms.
 
-Related guide: [Embeddings](https://beta.openai.com/docs/guides/embeddings)
+Related guide: [Embeddings](https://platform.openai.com/docs/guides/embeddings)
 
 ### Create embeddings
 
@@ -888,7 +925,7 @@ $flags = $open_ai->moderation([
 ]);
 ```
 
-Know more about Content Moderations here: [OpenAI Moderations](https://beta.openai.com/docs/api-reference/moderations)
+Know more about Content Moderations here: [OpenAI Moderations](https://platform.openai.com/docs/api-reference/moderations)
 
 ## List engines
 
@@ -904,6 +941,20 @@ $engines = $open_ai->engines();
 ```
 
 ## Audio
+
+### Text To Speech (TTS)
+
+```php
+
+$result = $open_ai->tts([
+    "model" => "tts-1", // tts-1-hd
+    "input" => "I'm going to use the stones again. Hey, we'd be going in short-handed, you know",
+    "voice" => "alloy", // echo, fable, onyx, nova, and shimmer
+]);
+
+// Save audio file
+file_put_contents('tts-result.mp3', $result);
+```
 
 ### Create Transcription
 
@@ -1515,18 +1566,6 @@ The MIT License (MIT). Please see [License File](LICENSE.md) for more informatio
 ## Donation
 
 <a href="https://www.buymeacoffee.com/orhane" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me A Coffee" style="height: 41px !important;width: 174px !important;box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;-webkit-box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;" ></a>
-
-#### btc
-
-![image](https://user-images.githubusercontent.com/22305274/209946578-fc7db433-699c-491f-9f8b-1c962f0b9ea2.png)
-
-#### eth
-
-![image](https://user-images.githubusercontent.com/22305274/209946539-24f247d9-68a1-4f46-a18b-62790d943c99.png)
-
-#### doge
-
-![image](https://user-images.githubusercontent.com/22305274/209946556-164798d0-e404-4b6c-8669-d63e78f24228.png)
 
 ## Star History
 

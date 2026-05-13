@@ -9,6 +9,7 @@ class OpenAi
     private string $engine = "davinci";
     private string $model = "text-davinci-002";
     private string $chatModel = "gpt-3.5-turbo";
+    private string $assistantsBetaVersion = "v1";
     private array $headers;
     private array $contentTypes;
     private int $timeout = 0;
@@ -846,7 +847,7 @@ class OpenAi
     public function createAssistant($data)
     {
         $data['model'] = $data['model'] ?? $this->chatModel;
-        $this->headers[] = 'OpenAI-Beta: assistants=v1';
+        $this->addAssistantsBetaHeader();
         $url = Url::assistantsUrl();
         $this->baseUrl($url);
 
@@ -860,7 +861,7 @@ class OpenAi
      */
     public function retrieveAssistant($assistantId)
     {
-        $this->headers[] = 'OpenAI-Beta: assistants=v1';
+        $this->addAssistantsBetaHeader();
         $url = Url::assistantsUrl() . '/' . $assistantId;
         $this->baseUrl($url);
 
@@ -875,7 +876,7 @@ class OpenAi
      */
     public function modifyAssistant($assistantId, $data)
     {
-        $this->headers[] = 'OpenAI-Beta: assistants=v1';
+        $this->addAssistantsBetaHeader();
         $url = Url::assistantsUrl() . '/' . $assistantId;
         $this->baseUrl($url);
 
@@ -889,7 +890,7 @@ class OpenAi
      */
     public function deleteAssistant($assistantId)
     {
-        $this->headers[] = 'OpenAI-Beta: assistants=v1';
+        $this->addAssistantsBetaHeader();
         $url = Url::assistantsUrl() . '/' . $assistantId;
         $this->baseUrl($url);
 
@@ -903,7 +904,7 @@ class OpenAi
      */
     public function listAssistants($query = [])
     {
-        $this->headers[] = 'OpenAI-Beta: assistants=v1';
+        $this->addAssistantsBetaHeader();
         $url = Url::assistantsUrl();
         if (count($query) > 0) {
             $url .= '?' . http_build_query($query);
@@ -921,7 +922,7 @@ class OpenAi
      */
     public function createAssistantFile($assistantId, $fileId)
     {
-        $this->headers[] = 'OpenAI-Beta: assistants=v1';
+        $this->addAssistantsBetaHeader();
         $url = Url::assistantsUrl() . '/' . $assistantId . '/files';
         $this->baseUrl($url);
 
@@ -936,7 +937,7 @@ class OpenAi
      */
     public function retrieveAssistantFile($assistantId, $fileId)
     {
-        $this->headers[] = 'OpenAI-Beta: assistants=v1';
+        $this->addAssistantsBetaHeader();
         $url = Url::assistantsUrl() . '/' . $assistantId . '/files/' . $fileId;
         $this->baseUrl($url);
 
@@ -951,7 +952,7 @@ class OpenAi
      */
     public function listAssistantFiles($assistantId, $query = [])
     {
-        $this->headers[] = 'OpenAI-Beta: assistants=v1';
+        $this->addAssistantsBetaHeader();
         $url = Url::assistantsUrl() . '/' . $assistantId . '/files';
         if (count($query) > 0) {
             $url .= '?' . http_build_query($query);
@@ -969,7 +970,7 @@ class OpenAi
      */
     public function deleteAssistantFile($assistantId, $fileId)
     {
-        $this->headers[] = 'OpenAI-Beta: assistants=v1';
+        $this->addAssistantsBetaHeader();
         $url = Url::assistantsUrl() . '/' . $assistantId . '/files/' . $fileId;
         $this->baseUrl($url);
 
@@ -983,7 +984,7 @@ class OpenAi
      */
     public function createThread($data = [])
     {
-        $this->headers[] = 'OpenAI-Beta: assistants=v1';
+        $this->addAssistantsBetaHeader();
         $url = Url::threadsUrl();
         $this->baseUrl($url);
 
@@ -997,7 +998,7 @@ class OpenAi
      */
     public function retrieveThread($threadId)
     {
-        $this->headers[] = 'OpenAI-Beta: assistants=v1';
+        $this->addAssistantsBetaHeader();
         $url = Url::threadsUrl() . '/' . $threadId;
         $this->baseUrl($url);
 
@@ -1012,7 +1013,7 @@ class OpenAi
      */
     public function modifyThread($threadId, $data)
     {
-        $this->headers[] = 'OpenAI-Beta: assistants=v1';
+        $this->addAssistantsBetaHeader();
         $url = Url::threadsUrl() . '/' . $threadId;
         $this->baseUrl($url);
 
@@ -1026,7 +1027,7 @@ class OpenAi
      */
     public function deleteThread($threadId)
     {
-        $this->headers[] = 'OpenAI-Beta: assistants=v1';
+        $this->addAssistantsBetaHeader();
         $url = Url::threadsUrl() . '/' . $threadId;
         $this->baseUrl($url);
 
@@ -1041,7 +1042,7 @@ class OpenAi
      */
     public function createThreadMessage($threadId, $data)
     {
-        $this->headers[] = 'OpenAI-Beta: assistants=v1';
+        $this->addAssistantsBetaHeader();
         $url = Url::threadsUrl() . '/' . $threadId . '/messages';
         $this->baseUrl($url);
 
@@ -1056,7 +1057,7 @@ class OpenAi
      */
     public function retrieveThreadMessage($threadId, $messageId)
     {
-        $this->headers[] = 'OpenAI-Beta: assistants=v1';
+        $this->addAssistantsBetaHeader();
         $url = Url::threadsUrl() . '/' . $threadId . '/messages/' . $messageId;
         $this->baseUrl($url);
 
@@ -1072,7 +1073,7 @@ class OpenAi
      */
     public function modifyThreadMessage($threadId, $messageId, $data)
     {
-        $this->headers[] = 'OpenAI-Beta: assistants=v1';
+        $this->addAssistantsBetaHeader();
         $url = Url::threadsUrl() . '/' . $threadId . '/messages/' . $messageId;
         $this->baseUrl($url);
 
@@ -1087,7 +1088,7 @@ class OpenAi
      */
     public function listThreadMessages($threadId, $query = [])
     {
-        $this->headers[] = 'OpenAI-Beta: assistants=v1';
+        $this->addAssistantsBetaHeader();
         $url = Url::threadsUrl() . '/' . $threadId . '/messages';
         if (count($query) > 0) {
             $url .= '?' . http_build_query($query);
@@ -1106,7 +1107,7 @@ class OpenAi
      */
     public function retrieveMessageFile($threadId, $messageId, $fileId)
     {
-        $this->headers[] = 'OpenAI-Beta: assistants=v1';
+        $this->addAssistantsBetaHeader();
         $url = Url::threadsUrl() . '/' . $threadId . '/messages/' . $messageId . '/files/' . $fileId;
         $this->baseUrl($url);
 
@@ -1122,7 +1123,7 @@ class OpenAi
      */
     public function listMessageFiles($threadId, $messageId, $query = [])
     {
-        $this->headers[] = 'OpenAI-Beta: assistants=v1';
+        $this->addAssistantsBetaHeader();
         $url = Url::threadsUrl() . '/' . $threadId . '/messages/' . $messageId . '/files';
         if (count($query) > 0) {
             $url .= '?' . http_build_query($query);
@@ -1138,9 +1139,19 @@ class OpenAi
      * @return bool|string
      * @deprecated The Assistants API is being shut down on August 26, 2026. Migrate to the Responses API (response() with conversation reference).
      */
-    public function createRun($threadId, $data)
+    public function createRun($threadId, $data, $stream = null)
     {
-        $this->headers[] = 'OpenAI-Beta: assistants=v1';
+        if (array_key_exists('stream', $data) && $data['stream']) {
+            if ($stream == null) {
+                throw new Exception(
+                    'Please provide a stream function. Check https://github.com/orhanerday/open-ai#stream-example for an example.'
+                );
+            }
+
+            $this->stream_method = $stream;
+        }
+        
+        $this->addAssistantsBetaHeader();
         $url = Url::threadsUrl() . '/' . $threadId . '/runs';
         $this->baseUrl($url);
 
@@ -1155,7 +1166,7 @@ class OpenAi
      */
     public function retrieveRun($threadId, $runId)
     {
-        $this->headers[] = 'OpenAI-Beta: assistants=v1';
+        $this->addAssistantsBetaHeader();
         $url = Url::threadsUrl() . '/' . $threadId . '/runs/' . $runId;
         $this->baseUrl($url);
 
@@ -1171,7 +1182,7 @@ class OpenAi
      */
     public function modifyRun($threadId, $runId, $data)
     {
-        $this->headers[] = 'OpenAI-Beta: assistants=v1';
+        $this->addAssistantsBetaHeader();
         $url = Url::threadsUrl() . '/' . $threadId . '/runs/' . $runId;
         $this->baseUrl($url);
 
@@ -1186,7 +1197,7 @@ class OpenAi
      */
     public function listRuns($threadId, $query = [])
     {
-        $this->headers[] = 'OpenAI-Beta: assistants=v1';
+        $this->addAssistantsBetaHeader();
         $url = Url::threadsUrl() . '/' . $threadId . '/runs';
         if (count($query) > 0) {
             $url .= '?' . http_build_query($query);
@@ -1203,9 +1214,19 @@ class OpenAi
      * @return bool|string
      * @deprecated The Assistants API is being shut down on August 26, 2026. In Responses API, tool call loops are managed by the application code.
      */
-    public function submitToolOutputs($threadId, $runId, $outputs)
+    public function submitToolOutputs($threadId, $runId, $outputs, $stream = null)
     {
-        $this->headers[] = 'OpenAI-Beta: assistants=v1';
+        if (array_key_exists('stream', $outputs) && $outputs['stream']) {
+            if ($stream == null) {
+                throw new Exception(
+                    'Please provide a stream function. Check https://github.com/orhanerday/open-ai#stream-example for an example.'
+                );
+            }
+
+            $this->stream_method = $stream;
+        }
+        
+        $this->addAssistantsBetaHeader();
         $url = Url::threadsUrl() . '/' . $threadId . '/runs/' . $runId . '/submit_tool_outputs';
         $this->baseUrl($url);
 
@@ -1220,7 +1241,7 @@ class OpenAi
      */
     public function cancelRun($threadId, $runId)
     {
-        $this->headers[] = 'OpenAI-Beta: assistants=v1';
+        $this->addAssistantsBetaHeader();
         $url = Url::threadsUrl() . '/' . $threadId . '/runs/' . $runId . '/cancel';
         $this->baseUrl($url);
 
@@ -1234,7 +1255,7 @@ class OpenAi
      */
     public function createThreadAndRun($data)
     {
-        $this->headers[] = 'OpenAI-Beta: assistants=v1';
+        $this->addAssistantsBetaHeader();
         $url = Url::threadsUrl() . '/runs';
         $this->baseUrl($url);
 
@@ -1250,7 +1271,7 @@ class OpenAi
      */
     public function retrieveRunStep($threadId, $runId, $stepId)
     {
-        $this->headers[] = 'OpenAI-Beta: assistants=v1';
+        $this->addAssistantsBetaHeader();
         $url = Url::threadsUrl() . '/' . $threadId . '/runs/' . $runId . '/steps/' . $stepId;
         $this->baseUrl($url);
 
@@ -1266,7 +1287,7 @@ class OpenAi
      */
     public function listRunSteps($threadId, $runId, $query = [])
     {
-        $this->headers[] = 'OpenAI-Beta: assistants=v1';
+        $this->addAssistantsBetaHeader();
         $url = Url::threadsUrl() . '/' . $threadId . '/runs/' . $runId . '/steps';
         if (count($query) > 0) {
             $url .= '?' . http_build_query($query);
@@ -1274,6 +1295,18 @@ class OpenAi
         $this->baseUrl($url);
 
         return $this->sendRequest($url, 'GET');
+    }
+
+    /**
+     * @param $opts
+     * @return bool|string
+     */
+    public function tts($opts)
+    {
+        $url = Url::ttsUrl();
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'POST', $opts);
     }
 
     /**
@@ -1344,6 +1377,24 @@ class OpenAi
             $this->headers[] = "OpenAI-Organization: $org";
         }
     }
+    
+    /**
+     * @param  string  $org
+     */
+    public function setAssistantsBetaVersion(string $version)
+    {
+        if ($version != "") {
+            $this->assistantsBetaVersion = $version;
+        }
+    }
+
+    /**
+     * @return void
+     */
+    private function addAssistantsBetaHeader(){ 
+        $this->headers[] = 'OpenAI-Beta: assistants='.$this->assistantsBetaVersion;
+    }
+    
 
     /**
      * @param  string  $url
