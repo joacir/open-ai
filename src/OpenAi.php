@@ -213,8 +213,8 @@ class OpenAi
      */
     public function chat($opts, $stream = null)
     {
-        if ($stream != null && array_key_exists('stream', $opts)) {
-            if (! $opts['stream']) {
+        if (array_key_exists('stream', $opts) && $opts['stream']) {
+            if ($stream == null) {
                 throw new Exception(
                     'Please provide a stream function. Check https://github.com/orhanerday/open-ai#stream-example for an example.'
                 );
@@ -238,8 +238,8 @@ class OpenAi
      */
     public function response($opts, $stream = null)
     {
-        if ($stream != null && array_key_exists('stream', $opts)) {
-            if (! $opts['stream']) {
+        if (array_key_exists('stream', $opts) && $opts['stream']) {
+            if ($stream == null) {
                 throw new Exception(
                     'Please provide a stream function. Check https://github.com/orhanerday/open-ai#stream-example for an example.'
                 );

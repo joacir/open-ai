@@ -255,6 +255,16 @@ it('should handle simple chat completion using the new endpoint', function () us
     $this->assertStringContainsString('text', $result);
 })->group('working');
 
+it('should throw error when stream true without callback in chat', function () use ($open_ai) {
+    expect(fn () => $open_ai->chat([
+        'model' => 'gpt-3.5-turbo',
+        'messages' => [
+            ['role' => 'user', 'content' => 'Hello'],
+        ],
+        'stream' => true,
+    ]))->toThrow(Exception::class, 'Please provide a stream function. Check https://github.com/orhanerday/open-ai#stream-example for an example.');
+})->group('working');
+
 it('should handle create assistant', function () use ($open_ai) {
     $data = [
         'model' => 'gpt-3.5-turbo',
